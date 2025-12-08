@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from dotenv import load_dotenv
 from pathlib import Path
 import os
+import dj_database_url
 
 load_dotenv()
 
@@ -32,7 +33,7 @@ if not SECRET_KEY:
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['.elasticbeanstalk.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -102,6 +103,9 @@ DATABASES = {
     }
 }
 
+# Override with DATABASE_URL if present (for Heroku)
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -142,6 +146,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']   # add project-level static folder
 STATIC_ROOT = BASE_DIR / 'staticfiles'     # target for collectstatic
+
+# WhiteNoise configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

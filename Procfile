@@ -1,0 +1,1 @@
+web gunicorn Checkbook_demo.wsgi:application --log-file - 
